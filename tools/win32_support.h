@@ -47,7 +47,11 @@
 #endif
 #endif
 
+#pragma push_macro("_fmode")
+#undef _fmode
 int _fmode = _O_BINARY;
+#pragma pop_macro("_fmode")
+
 unsigned int _CRT_fmode = _O_BINARY;
 
 
