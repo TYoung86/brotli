@@ -20,41 +20,8 @@
 #include "../enc/compressor.h"
 
 #include <unistd.h>
-#if defined(_WIN32)
-#include <io.h>
-#include <share.h>
-#undef STDIN_FILENO
-#undef STDOUT_FILENO
-#undef S_IRUSR
-#undef S_IWUSR
 
-#define STDIN_FILENO _fileno(stdin)
-#define STDOUT_FILENO _fileno(stdout)
-#define S_IRUSR S_IREAD
-#define S_IWUSR S_IWRITE
-#define fdopen _fdopen
-#define unlink _unlink
-
-#define fopen ms_fopen
-#define open ms_open
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1400)
-#define fseek _fseeki64
-#define ftell _ftelli64
-#endif
-
-static inline FILE* ms_fopen(const char *filename, const char *mode) {
-  FILE* result = 0;
-  fopen_s(&result, filename, mode);
-  return result;
-}
-
-static inline int ms_open(const char *filename, int oflag, int pmode) {
-  int result = -1;
-  _sopen_s(&result, filename, oflag | O_BINARY, _SH_DENYNO, pmode);
-  return result;
-}
-#endif  /* WIN32 */
+#include "win32_support.h"
 
 
 static bool ParseQuality(const char* s, int* quality) {
