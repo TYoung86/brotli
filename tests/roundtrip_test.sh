@@ -18,13 +18,14 @@ $BRO
 
 for file in $INPUTS; do
   for quality in 1 6 9 11; do
-    echo "Roundtrip testing $file at quality $quality"
+    echo "Roundtrip file testing $file at quality $quality"
     compressed=${file}.bro
     uncompressed=${file}.unbro
     $BRO -f -q $quality -i $file -o $compressed
     $BRO -f -d -i $compressed -o $uncompressed
     diff -q $file $uncompressed
     # Test the streaming version
+    echo "Roundtrip pipe testing $file at quality $quality"
     cat $file | $BRO -q $quality | $BRO -d >$uncompressed
     diff -q $file $uncompressed
   done
