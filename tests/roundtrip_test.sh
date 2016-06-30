@@ -4,7 +4,8 @@
 
 set -o errexit
 
-BRO=../tools/bro
+BRO=`ls -L --append-exe ../tools/bro || ../tools/bro`
+
 INPUTS="""
 testdata/alice29.txt
 testdata/asyoulik.txt
@@ -16,6 +17,8 @@ testdata/plrabn12.txt
 $BRO
 """
 
+file_errors=0
+pipe_errors=0
 for file in $INPUTS; do
   for quality in 1 6 9 11; do
     echo "Roundtrip file testing $file at quality $quality"
@@ -23,10 +26,13 @@ for file in $INPUTS; do
     uncompressed=${file}.unbro
     $BRO -f -q $quality -i $file -o $compressed
     $BRO -f -d -i $compressed -o $uncompressed
-    diff -q $file $uncompressed
+    diff -q $file $uncompressed || true $(( file_errors++ ))
     # Test the streaming version
     echo "Roundtrip pipe testing $file at quality $quality"
-    cat $file | $BRO -q $quality | $BRO -d >$uncompressed
-    diff -q $file $uncompressed
+    $BRO -q $quality < $file | $BRO -d > $uncompressed
+    diff -q $file $uncompressed || true $(( pipe_errors++ ))
   done
 done
+errors=$(( file_errors + pipe_errors ))
+echo "Encountered $errors roundtrip errors"
+exit $errors

@@ -7,8 +7,8 @@ BROTLI = ..
 all: test
 
 test: deps
-	./compatibility_test.sh
 	./roundtrip_test.sh
+	./compatibility_test.sh
 
 deps :
 	$(MAKE) -C $(BROTLI)/tools
