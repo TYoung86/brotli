@@ -9,50 +9,57 @@
 #ifndef STDIN_FILENO
 #define STDIN_FILENO _fileno(stdin)
 #endif
+
 #ifndef STDOUT_FILENO 
 #define STDOUT_FILENO _fileno(stdout)
 #endif
+
 #ifndef S_IRUSR 
 #define S_IRUSR S_IREAD
 #endif
+
 #ifndef S_IWUSR 
 #define S_IWUSR S_IWRITE
 #endif
 
 #ifdef fdopen
 #undef fdopen
-#define fdopen _fdopen
 #endif
+#define fdopen _fdopen
+
 #ifdef unlink
 #undef unlink
-#define unlink _unlink
 #endif
+#define unlink _unlink
+
 #ifdef fopen
 #undef fopen
-#define fopen ms_fopen
 #endif
+#define fopen ms_fopen
+
 #ifdef open
 #undef open
-#define open ms_open
 #endif
+#define open ms_open
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1400)
 #ifdef fseek
 #undef fseek
-#define fseek _fseeki64
 #endif
+#define fseek _fseeki64
+
 #ifdef ftell
 #undef ftell
+#endif
 #define ftell _ftelli64
-#endif
-#endif
+
+#endif /* defined(_MSC_VER) && (_MSC_VER >= 1400) */
 
 #pragma push_macro("_fmode")
 #undef _fmode
 int _fmode = _O_BINARY;
 #pragma pop_macro("_fmode")
-
-unsigned int _CRT_fmode = _O_BINARY;
+int _CRT_fmode = _O_BINARY;
 
 
 static inline FILE* ms_fopen(const char *filename, const char *mode) {
@@ -63,9 +70,12 @@ static inline FILE* ms_fopen(const char *filename, const char *mode) {
 
 static inline int ms_open(const char *filename, int oflag, int pmode) {
   int result = -1;
-  _sopen_s(&result, filename, ( oflag & ~ O_TEXT ) | O_BINARY, _SH_DENYNO, pmode);
+  if ( (oflag & O_TEXT) == 0 ) {
+    oflag |= O_BINARY;
+  }
+  _sopen_s(&result, filename, oflag, _SH_DENYNO, pmode);
   return result;
 }
-#endif  /* WIN32 */
+#endif  /* _WIN32 */
 
 #endif  /* BROTLI_TOOLS_WIN32_SUPPORT_H_ */
