@@ -94,6 +94,16 @@ int _CRT_fmode = _O_BINARY;
 
 #endif
 
+#if O_BINARY == 0
+#undef O_BINARY
+#define O_BINARY 0x0004
+#endif
+
+#if O_TEXT == 0
+#undef O_TEXT
+#define O_TEXT 0x0008
+#endif
+
 INITIALIZER(binary_std_streams) {
 	fflush( STDIN_FILENO );
 	_setmode( STDIN_FILENO, _O_BINARY );
