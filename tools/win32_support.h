@@ -105,9 +105,9 @@ int _CRT_fmode = _O_BINARY;
 #endif
 
 INITIALIZER(binary_std_streams) {
-	fflush( STDIN_FILENO );
+	fflush( stdin );
 	_setmode( STDIN_FILENO, _O_BINARY );
-	fflush( STDOUT_FILENO );
+	fflush( stdout );
 	_setmode( STDOUT_FILENO, _O_BINARY );
 }
 
