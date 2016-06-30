@@ -4,7 +4,7 @@
 
 set -o errexit
 
-BRO=`ls -L --append-exe ../tools/bro || ../tools/bro`
+BRO=`ls -L --append-exe ../tools/bro || echo ../tools/bro`
 
 INPUTS="""
 testdata/alice29.txt
