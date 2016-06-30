@@ -6,3 +6,9 @@
 tools/bro
 build/
 dist/
+.dirstamp
+*.Plo
+*.Po
+*.lo
+*.exe
+*.uncompressed
